@@ -51,7 +51,8 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
   filter: drop-shadow(0 3px 0 #1a0c04) drop-shadow(0 0 14px rgba(0, 0, 0, 0.8)); }
 .logo .ai { background: none; -webkit-text-fill-color: var(--teal); color: var(--teal); text-shadow: 0 0 10px rgba(63, 224, 200, 0.85), 0 0 24px rgba(63, 224, 200, 0.5); animation: aiGlow 3.2s ease-in-out infinite; filter: none; }
 @keyframes aiGlow { 0%, 100% { text-shadow: 0 0 6px rgba(63, 224, 200, 0.6), 0 0 16px rgba(63, 224, 200, 0.3); } 50% { text-shadow: 0 0 12px rgba(63, 224, 200, 1), 0 0 30px rgba(63, 224, 200, 0.6); } }
-.tagline { font-style: italic; color: #e8d6b4; text-shadow: 0 1px 3px #000, 0 0 10px #000; margin: 0 0 22px; font-size: 17px; }
+.tagline { font-style: italic; color: #e8d6b4; text-shadow: 0 1px 3px #000, 0 0 10px #000; margin: 0 0 22px; font-size: 17px; text-wrap: balance; }
+.tagline span { white-space: nowrap; }
 .t-tap { background: rgba(20, 12, 8, 0.6); border: 2px solid var(--bronze); padding: 12px 26px; font-size: 18px; border-radius: 4px; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
 .t-menu { width: min(80vw, 280px); margin: 0 auto; }
