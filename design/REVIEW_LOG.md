@@ -80,3 +80,4 @@ Owner found the tagline's lone "seems.", "[object HTMLElement]" in Credits and a
 | Small: Settings note, "A" slot, stacked Save over Pause, Toktai narration in quotes, "Things here", Saga button, no How to play on title | All fixed |
 | Companions listed under Items › Key | Kept: by design (they are "carried" for use-on puzzles) |
 | Battle log "The Drunk B…" then "The drunk…" | Kept: minor |
+| Regression found on the live site after the polish deploy: desktop title logo cut to "BarbarA" (the title box was made scrollable for short screens, which clipped its overflow; the checker had been told to ignore the logo's overflow) | Title and end-screen boxes widened to fit the logo; scrolling only on short screens; checker no longer ignores the logo. Checked at 1920, 1280, 800, phone, sideways, 360 |

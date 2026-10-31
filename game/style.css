@@ -48,7 +48,6 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 /* ---------------------------------------------------------------- screens */
 .screen { position: fixed; left: 0; top: 0; width: 100%; height: var(--app-h); }
 #scr-title, #scr-card { background: #050306; display: flex; align-items: safe center; justify-content: center; overflow: hidden; }
-#scr-title > .t-inner { max-height: 100%; overflow-y: auto; }
 /* The title waits, hidden, until its painting and fonts are in, then fades in
    once (no font swaps or art popping in). The failsafe shows it after 4s even
    if the script never says it is ready. */
@@ -58,13 +57,13 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 /* keeps its space while the game loads, so nothing jumps when it appears */
 .t-tap.pending { visibility: hidden; }
 #title-art, #card-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
-.t-inner { position: relative; z-index: 1; text-align: center; padding: 16px; width: min(92vw, 420px); padding-bottom: env(safe-area-inset-bottom); }
+.t-inner { position: relative; z-index: 1; text-align: center; padding: 16px; width: min(94vw, 600px); padding-bottom: env(safe-area-inset-bottom); }
 .logo { font-family: var(--display); font-weight: normal; font-size: clamp(44px, 12vw, 84px); margin: 0 0 4px; letter-spacing: 1px; line-height: 1.05; color: #f0c870; }
 .logo span:not(.ai) { background: linear-gradient(#fff0c0, #e0a040 55%, #8a5418); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 3px 0 #1a0c04) drop-shadow(0 0 14px rgba(0, 0, 0, 0.8)); }
 .logo .ai { background: none; -webkit-text-fill-color: var(--teal); color: var(--teal); text-shadow: 0 0 10px rgba(63, 224, 200, 0.85), 0 0 24px rgba(63, 224, 200, 0.5); animation: aiGlow 3.2s ease-in-out infinite; filter: none; }
 @keyframes aiGlow { 0%, 100% { text-shadow: 0 0 6px rgba(63, 224, 200, 0.6), 0 0 16px rgba(63, 224, 200, 0.3); } 50% { text-shadow: 0 0 12px rgba(63, 224, 200, 1), 0 0 30px rgba(63, 224, 200, 0.6); } }
-.tagline { font-style: italic; color: #e8d6b4; text-shadow: 0 1px 3px #000, 0 0 10px #000; margin: 0 0 22px; font-size: 17px; text-wrap: balance; }
+.tagline { max-width: 400px; margin-left: auto !important; margin-right: auto !important; font-style: italic; color: #e8d6b4; text-shadow: 0 1px 3px #000, 0 0 10px #000; margin: 0 0 22px; font-size: 17px; text-wrap: balance; }
 .tagline span { white-space: nowrap; }
 .t-tap { background: rgba(20, 12, 8, 0.6); border: 2px solid var(--bronze); padding: 12px 26px; font-size: 18px; border-radius: 4px; animation: pulse 2s ease-in-out infinite; }
 @keyframes pulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
@@ -482,7 +481,7 @@ body.layout-portrait .tip-x, body.layout-landscape .tip-x { width: 30px; height:
 /* the end */
 #scr-end { background: radial-gradient(#1c1a26, #050304 75%); display: flex; z-index: 40; overflow-y: auto; }
 /* margin:auto centres it when it fits and lets the whole of it scroll when it doesn't */
-.end-inner { text-align: center; width: min(90vw, 440px); padding: 20px 0 calc(20px + env(safe-area-inset-bottom)); margin: auto; }
+.end-inner { text-align: center; width: min(92vw, 540px); padding: 20px 0 calc(20px + env(safe-area-inset-bottom)); margin: auto; }
 .end-line { font-style: italic; color: #efe0c4; font-size: 19px; margin: 6px 0 12px; }
 .end-ending { font-family: var(--display); color: #f0c870; font-size: 20px; margin: 0 0 4px; }
 .end-found { font-family: var(--ui); color: var(--bronze-lt); font-size: 14px; margin: 0 0 8px; }
@@ -521,7 +520,8 @@ body.layout-landscape .modal.pause .btn.wide { margin: 4px 0; }
 @media (max-height: 430px) {
   #scr-title .logo { font-size: clamp(34px, 15vh, 60px); }
   #scr-title .tagline { margin-bottom: 10px; font-size: 15px; }
-  #scr-title .t-inner { padding-top: 8px; padding-bottom: 8px; }
+  #scr-title .t-inner { padding-top: 8px; padding-bottom: 8px; max-height: 100%; overflow-y: auto; }
+  #scr-title .tagline { max-width: none; }
   #scr-title .t-inner { width: min(94vw, 500px); }
   .t-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%; }
   .t-menu .btn { margin: 0; min-height: 40px; flex: 0 0 calc(50% - 3px); text-align: center; }
