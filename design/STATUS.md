@@ -55,3 +55,6 @@ Request: `/gg:gamegen --change add three optional side quests, including an aren
 - [x] Build: Pit (ch1), Articles (ch2), Jackal (ch4); Journal side quests + 'closed'; sim single-encounter mode; replay noEndCheck/verbose; bug-hunter review: 7 fixes; ligatures disabled (pixel font drew 'fi' as 'A')
 - [x] Play-test: sq1-pit-straight, sq1-pit-dive, sq2-articles, sq3-jackal pass; all 5 chapters + ch1-touch + continuous + endings pass; dod-check 52/45/53/46/46; validate 0/0; battle-test 23/23. Sim: e5_thulamon median 5 rounds vs target 6-10 (pre-existing, unchanged by these changes)
 - [x] Wrap up: README + screenshots (desktop-pit, phone-journal-side-quest), report
+
+## Published
+- 2026-10-31: live at https://barbarain.synapticnoise.com/ (repo zeveck/barbarain), listed at the top of synapticnoise.com.
