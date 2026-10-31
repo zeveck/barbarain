@@ -1,0 +1,16 @@
+{
+ "id": "kord-attack",
+ "frames": 4,
+ "fps": 10,
+ "frameW": 66,
+ "frameH": 64,
+ "idleOffsetX": 23,
+ "idleOffsetY": 12,
+ "note": "draw frame at (idleX - idleOffsetX, idleY - idleOffsetY); feet on the idle sprite's bottom row, rear heel registered",
+ "labels": [
+  "windup",
+  "strike",
+  "follow-through",
+  "recover"
+ ]
+}

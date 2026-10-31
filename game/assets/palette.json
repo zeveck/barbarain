@@ -1,0 +1,351 @@
+{
+ "generated": "2026-10-30",
+ "sources": [
+  {
+   "source": "game/assets/style-anchor.png",
+   "pixels": 20826,
+   "teal_dropped": 7
+  },
+  {
+   "source": "art-src/bg/shz-tavern.jpg",
+   "pixels": 36608,
+   "teal_dropped": 0
+  },
+  {
+   "source": "art-src/bg/shz-bazaar.jpg",
+   "pixels": 36464,
+   "teal_dropped": 144
+  },
+  {
+   "source": "art-src/bg/gal-docks.jpg",
+   "pixels": 34042,
+   "teal_dropped": 2566
+  },
+  {
+   "source": "art-src/bg/sea-deck.jpg",
+   "pixels": 35660,
+   "teal_dropped": 948
+  },
+  {
+   "source": "art-src/bg/wyr-garden.jpg",
+   "pixels": 29523,
+   "teal_dropped": 7085
+  },
+  {
+   "source": "art-src/bg/pyr-catacombs.jpg",
+   "pixels": 36414,
+   "teal_dropped": 194
+  }
+ ],
+ "world": [
+  {
+   "name": "sand-0",
+   "hex": "#3a1a0c"
+  },
+  {
+   "name": "sand-1",
+   "hex": "#6e3414"
+  },
+  {
+   "name": "sand-2",
+   "hex": "#a8561c"
+  },
+  {
+   "name": "sand-3",
+   "hex": "#d9832e"
+  },
+  {
+   "name": "sand-4",
+   "hex": "#f2b35c"
+  },
+  {
+   "name": "crimson-0",
+   "hex": "#2a0a10"
+  },
+  {
+   "name": "crimson-1",
+   "hex": "#5c1018"
+  },
+  {
+   "name": "crimson-2",
+   "hex": "#8f1a1f"
+  },
+  {
+   "name": "crimson-3",
+   "hex": "#c22a26"
+  },
+  {
+   "name": "crimson-4",
+   "hex": "#e85a40"
+  },
+  {
+   "name": "bronze-0",
+   "hex": "#3b2a0e"
+  },
+  {
+   "name": "bronze-1",
+   "hex": "#6e4d16"
+  },
+  {
+   "name": "bronze-2",
+   "hex": "#a3781f"
+  },
+  {
+   "name": "bronze-3",
+   "hex": "#d4a83a"
+  },
+  {
+   "name": "bronze-4",
+   "hex": "#f5d77a"
+  },
+  {
+   "name": "indigo-0",
+   "hex": "#0c0b1e"
+  },
+  {
+   "name": "indigo-1",
+   "hex": "#1b1a3f"
+  },
+  {
+   "name": "indigo-2",
+   "hex": "#2c2d6b"
+  },
+  {
+   "name": "indigo-3",
+   "hex": "#43489a"
+  },
+  {
+   "name": "indigo-4",
+   "hex": "#6a72c4"
+  },
+  {
+   "name": "jade-0",
+   "hex": "#08170f"
+  },
+  {
+   "name": "jade-1",
+   "hex": "#12301f"
+  },
+  {
+   "name": "jade-2",
+   "hex": "#1e4d30"
+  },
+  {
+   "name": "jade-3",
+   "hex": "#2f7046"
+  },
+  {
+   "name": "jade-4",
+   "hex": "#4f9a5e"
+  },
+  {
+   "name": "skin-0",
+   "hex": "#5a2c18"
+  },
+  {
+   "name": "skin-1",
+   "hex": "#8e4a2a"
+  },
+  {
+   "name": "skin-2",
+   "hex": "#c27448"
+  },
+  {
+   "name": "skin-3",
+   "hex": "#e8a678"
+  },
+  {
+   "name": "skin-4",
+   "hex": "#f6cfa6"
+  },
+  {
+   "name": "skindk-0",
+   "hex": "#26140e"
+  },
+  {
+   "name": "skindk-1",
+   "hex": "#4a2a1c"
+  },
+  {
+   "name": "skindk-2",
+   "hex": "#774630"
+  },
+  {
+   "name": "skindk-3",
+   "hex": "#a36a48"
+  },
+  {
+   "name": "copper-0",
+   "hex": "#5a200c"
+  },
+  {
+   "name": "copper-1",
+   "hex": "#9a3a12"
+  },
+  {
+   "name": "copper-2",
+   "hex": "#d0601e"
+  },
+  {
+   "name": "copper-3",
+   "hex": "#f08a3a"
+  },
+  {
+   "name": "seagreen-0",
+   "hex": "#0f2a22"
+  },
+  {
+   "name": "seagreen-1",
+   "hex": "#1d4a3a"
+  },
+  {
+   "name": "seagreen-2",
+   "hex": "#2e6b52"
+  },
+  {
+   "name": "seagreen-3",
+   "hex": "#4a8f6c"
+  },
+  {
+   "name": "slate-0",
+   "hex": "#141c2a"
+  },
+  {
+   "name": "slate-1",
+   "hex": "#24324a"
+  },
+  {
+   "name": "slate-2",
+   "hex": "#3a4e68"
+  },
+  {
+   "name": "slate-3",
+   "hex": "#5a7088"
+  },
+  {
+   "name": "stone-0",
+   "hex": "#1e1c1e"
+  },
+  {
+   "name": "stone-1",
+   "hex": "#3a3638"
+  },
+  {
+   "name": "stone-2",
+   "hex": "#5e585a"
+  },
+  {
+   "name": "stone-3",
+   "hex": "#8a8282"
+  },
+  {
+   "name": "stone-4",
+   "hex": "#bab0a8"
+  },
+  {
+   "name": "stone-5",
+   "hex": "#e8e0d0"
+  },
+  {
+   "name": "black-0",
+   "hex": "#050308"
+  },
+  {
+   "name": "sampled-00",
+   "hex": "#a09678"
+  },
+  {
+   "name": "sampled-01",
+   "hex": "#c2bc78"
+  },
+  {
+   "name": "sampled-02",
+   "hex": "#93814b"
+  },
+  {
+   "name": "sampled-03",
+   "hex": "#685538"
+  },
+  {
+   "name": "sampled-04",
+   "hex": "#8d7055"
+  },
+  {
+   "name": "sampled-05",
+   "hex": "#c4b486"
+  },
+  {
+   "name": "sampled-06",
+   "hex": "#88836f"
+  },
+  {
+   "name": "sampled-07",
+   "hex": "#080e2b"
+  },
+  {
+   "name": "sampled-08",
+   "hex": "#c76934"
+  },
+  {
+   "name": "sampled-09",
+   "hex": "#796e68"
+  },
+  {
+   "name": "sampled-10",
+   "hex": "#39261f"
+  }
+ ],
+ "teal": [
+  {
+   "name": "teal-0",
+   "hex": "#04221f"
+  },
+  {
+   "name": "teal-1",
+   "hex": "#08403a"
+  },
+  {
+   "name": "teal-2",
+   "hex": "#0e6158"
+  },
+  {
+   "name": "teal-3",
+   "hex": "#148478"
+  },
+  {
+   "name": "teal-4",
+   "hex": "#1fa898"
+  },
+  {
+   "name": "teal-5",
+   "hex": "#36c8b4"
+  },
+  {
+   "name": "teal-6",
+   "hex": "#6ae4d0"
+  },
+  {
+   "name": "teal-7",
+   "hex": "#b0f7ea"
+  }
+ ],
+ "ui": {
+  "panel-leather": "#4a2a1c",
+  "panel-leather-dark": "#26140e",
+  "border-bronze": "#d4a83a",
+  "border-bronze-dark": "#6e4d16",
+  "parchment": "#e8e0d0",
+  "parchment-shadow": "#bab0a8",
+  "ink": "#050308",
+  "accent-crimson": "#c22a26",
+  "accent-crimson-dark": "#5c1018",
+  "gold-text": "#f5d77a",
+  "night": "#0c0b1e",
+  "ain-teal": "#36c8b4",
+  "ain-teal-dim": "#148478",
+  "ain-teal-glow": "#6ae4d0",
+  "hp": "#c22a26",
+  "mp": "#6a72c4",
+  "xp": "#d4a83a"
+ }
+}

@@ -1,0 +1,16 @@
+{
+ "id": "toktai-shoot",
+ "frames": 4,
+ "fps": 10,
+ "frameW": 37,
+ "frameH": 50,
+ "idleOffsetX": 7,
+ "idleOffsetY": 4,
+ "note": "draw frame at (idleX - idleOffsetX, idleY - idleOffsetY); feet on the idle sprite's bottom row, rear heel registered",
+ "labels": [
+  "windup",
+  "strike",
+  "follow-through",
+  "recover"
+ ]
+}

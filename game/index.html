@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BarbarAIn: a sword-and-sorcery text adventure</title>
+<meta name="description" content="A Cimmerian thief, a sorcerer's tower, and a job that is not what it seems. Read, tap, scheme and fight your way through a 16-bit text adventure RPG of the Hyborian Age.">
+<meta name="theme-color" content="#1a110b">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BarbarAIn">
+<meta property="og:description" content="A Cimmerian thief, a sorcerer's tower, and a job that is not what it seems. A 16-bit text adventure RPG of the Hyborian Age.">
+<meta property="og:url" content="https://barbarain.synapticnoise.com/">
+<meta property="og:image" content="https://barbarain.synapticnoise.com/social-card.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="A sorcerer's tower at night over the rooftops of Shadizar, with the BarbarAIn logo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BarbarAIn">
+<meta name="twitter:description" content="A Cimmerian thief, a sorcerer's tower, and a job that is not what it seems.">
+<meta name="twitter:image" content="https://barbarain.synapticnoise.com/social-card.jpg">
+<link rel="canonical" href="https://barbarain.synapticnoise.com/">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="layout-portrait">
+
+<!-- title -->
+<section id="scr-title" class="screen">
+  <canvas id="title-art" width="320" height="180" aria-hidden="true"></canvas>
+  <div class="t-inner">
+    <h1 class="logo" aria-label="BarbarAIn"><span>Barbar</span><span class="ai">AI</span><span>n</span></h1>
+    <p class="tagline">A Cimmerian thief. A sorcerer's tower. A job that is not what it seems.</p>
+    <button id="t-tap" class="t-tap">Tap to begin</button>
+    <nav id="t-menu" class="t-menu" hidden>
+      <button id="t-continue" class="btn wide primary">Continue</button>
+      <button id="t-new" class="btn wide">New Game</button>
+      <button id="t-load" class="btn wide">Load</button>
+      <button id="t-settings" class="btn wide">Settings</button>
+      <button id="t-credits" class="btn wide">Credits</button>
+    </nav>
+  </div>
+</section>
+
+<!-- chapter card -->
+<section id="scr-card" class="screen" hidden>
+  <canvas id="card-art" width="320" height="180" aria-hidden="true"></canvas>
+  <div class="card-inner">
+    <div id="card-num" class="card-num"></div>
+    <div id="card-name" class="card-name"></div>
+    <p id="card-text" class="card-text"></p>
+    <div class="card-tap">tap to continue</div>
+  </div>
+</section>
+
+<!-- game over -->
+<section id="scr-gameover" class="screen" hidden>
+  <div class="go-inner">
+    <h2>Fallen</h2>
+    <p class="go-line">Crom does not answer. He never does.</p>
+    <p id="go-hint" class="go-hint" hidden></p>
+    <div class="go-btns">
+      <button id="go-retry" class="btn wide primary">Try again</button>
+      <button id="go-load" class="btn wide">Load</button>
+      <button id="go-saga" class="btn wide">Switch to Saga</button>
+    </div>
+  </div>
+</section>
+
+<!-- the end -->
+<section id="scr-end" class="screen" hidden>
+  <div class="end-inner">
+    <h1 class="logo" aria-label="BarbarAIn"><span>Barbar</span><span class="ai">AI</span><span>n</span></h1>
+    <p class="end-line">Here ends the chronicle of Kord of Cimmeria.</p>
+    <p id="end-ending" class="end-ending"></p>
+    <p id="end-found" class="end-found"></p>
+    <ul id="end-hints" class="end-hints" hidden></ul>
+    <dl id="end-credits" class="end-credits"></dl>
+    <div class="go-btns">
+      <button id="end-core" class="btn wide" hidden>Return to the final choice</button>
+      <button id="end-wyrm" class="btn wide" hidden>Return to the Wyrm's heart (Chapter III)</button>
+      <button id="end-title" class="btn wide primary">Return to title</button>
+      <button id="end-credits-btn" class="btn wide">Credits</button>
+    </div>
+  </div>
+</section>
+
+<!-- play -->
+<section id="scr-game" class="screen" hidden>
+  <div id="app">
+    <nav id="tabs" class="tabs" aria-label="Panels">
+      <button data-tab="play" class="on"><span class="ti">⚔</span><span>Play</span></button>
+      <button data-tab="items"><span class="ti">🎒</span><span>Items</span></button>
+      <button data-tab="party"><span class="ti">♛</span><span>Party</span></button>
+      <button data-tab="journal"><span class="ti">✎</span><span>Journal</span></button>
+      <button data-tab="map"><span class="ti">✧</span><span>Map</span></button>
+    </nav>
+    <div id="colL">
+      <header id="topbar">
+        <div class="tb-loc"><span id="tb-chapter" class="tb-ch">I</span><span id="tb-room" class="tb-room"></span></div>
+        <div id="tb-mini" class="tb-mini"></div>
+        <div class="tb-gold" title="Silver"><span class="coin">◈</span><span id="tb-gold">0</span></div>
+        <button id="btn-kbd" class="tb-btn" aria-label="Command line">⌨</button>
+        <button id="btn-mute" class="tb-btn" aria-label="Mute">🔊</button>
+        <button id="btn-menu" class="tb-btn" aria-label="Menu">☰</button>
+      </header>
+      <div id="picture"><canvas id="scene" width="320" height="180" aria-label="The scene"></canvas></div>
+      <div id="partystrip" class="partystrip"></div>
+    </div>
+    <div id="colR">
+      <div id="story" aria-live="polite"><div id="log"></div></div>
+      <div id="banner" hidden><span id="banner-text"></span><button id="banner-x" aria-label="Cancel">✕</button></div>
+      <div id="tray"><div id="chips" class="chips"></div><div id="buttons" class="buttons"></div></div>
+      <form id="cmdform" autocomplete="off"><span class="prompt">›</span><input id="cmd" type="text" enterkeyhint="send" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="type a command: look, take, use oil on rag…" aria-label="Command"><button type="submit" class="go" aria-label="Send">⏎</button></form>
+    </div>
+    <aside id="panel">
+      <div class="panel-tabs">
+        <button data-tab="party">Party</button><button data-tab="items">Items</button><button data-tab="journal">Journal</button><button data-tab="map">Map</button>
+      </div>
+      <div id="panel-body"></div>
+    </aside>
+  </div>
+</section>
+
+<div id="overlay" hidden></div>
+<div id="toasts" aria-live="polite"></div>
+<div id="tips"></div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+ "id": "valka-lunge",
+ "frames": 4,
+ "fps": 10,
+ "frameW": 57,
+ "frameH": 48,
+ "idleOffsetX": 14,
+ "idleOffsetY": 0,
+ "note": "draw frame at (idleX - idleOffsetX, idleY - idleOffsetY); feet on the idle sprite's bottom row, rear heel registered",
+ "labels": [
+  "windup",
+  "strike",
+  "follow-through",
+  "recover"
+ ]
+}

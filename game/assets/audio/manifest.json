@@ -1,0 +1,252 @@
+{
+  "music": {
+    "battle": {
+      "file": "music/battle.mp3",
+      "loopStart": 3.232,
+      "loopEnd": 72.24,
+      "crossfade": 1.5
+    },
+    "boss": {
+      "file": "music/boss.mp3",
+      "loopStart": 2.828,
+      "loopEnd": 68.84,
+      "crossfade": 1.5
+    },
+    "dungeon": {
+      "file": "music/dungeon.mp3",
+      "loopStart": 2.98,
+      "loopEnd": 71.49,
+      "crossfade": 2
+    },
+    "ending": {
+      "file": "music/ending.mp3",
+      "loopStart": 0,
+      "loopEnd": 60.082,
+      "crossfade": 0,
+      "once": true
+    },
+    "finale": {
+      "file": "music/finale.mp3",
+      "loopStart": 5.831,
+      "loopEnd": 67.54,
+      "crossfade": 1.5
+    },
+    "gallows": {
+      "file": "music/gallows.mp3",
+      "loopStart": 5.602,
+      "loopEnd": 57.03,
+      "crossfade": 1.5
+    },
+    "khemi": {
+      "file": "music/khemi.mp3",
+      "loopStart": 4.537,
+      "loopEnd": 55.08,
+      "crossfade": 2
+    },
+    "shadizar": {
+      "file": "music/shadizar.mp3",
+      "loopStart": 5.006,
+      "loopEnd": 55.02,
+      "crossfade": 1.5
+    },
+    "title": {
+      "file": "music/title.mp3",
+      "loopStart": 4.018,
+      "loopEnd": 57.83,
+      "crossfade": 2
+    },
+    "wyrm": {
+      "file": "music/wyrm.mp3",
+      "loopStart": 5.373,
+      "loopEnd": 56.03,
+      "crossfade": 2
+    }
+  },
+  "sfx": {
+    "ain-cast": {
+      "file": "sfx/ain-cast.mp3",
+      "loop": false,
+      "volume": 2.14
+    },
+    "alarm": {
+      "file": "sfx/alarm.mp3",
+      "loop": false,
+      "volume": 0.63
+    },
+    "ally-fall": {
+      "file": "sfx/ally-fall.mp3",
+      "loop": false,
+      "volume": 0.58
+    },
+    "arrow": {
+      "file": "sfx/arrow.mp3",
+      "loop": false,
+      "volume": 0.69
+    },
+    "battle-swoosh": {
+      "file": "sfx/battle-swoosh.mp3",
+      "loop": false,
+      "volume": 0.46
+    },
+    "chapter": {
+      "file": "sfx/chapter.mp3",
+      "loop": false,
+      "volume": 0.82
+    },
+    "chest": {
+      "file": "sfx/chest.mp3",
+      "loop": false,
+      "volume": 1.48
+    },
+    "clang": {
+      "file": "sfx/clang.mp3",
+      "loop": false,
+      "volume": 0.83
+    },
+    "coins": {
+      "file": "sfx/coins.mp3",
+      "loop": false,
+      "volume": 1.41
+    },
+    "crowd-cheer": {
+      "file": "sfx/crowd-cheer.mp3",
+      "loop": false,
+      "volume": 0.79
+    },
+    "door-creak": {
+      "file": "sfx/door-creak.mp3",
+      "loop": false,
+      "volume": 0.96
+    },
+    "enemy-death": {
+      "file": "sfx/enemy-death.mp3",
+      "loop": false,
+      "volume": 0.68
+    },
+    "fire": {
+      "file": "sfx/fire.mp3",
+      "loop": false,
+      "volume": 0.59
+    },
+    "game-over": {
+      "file": "sfx/game-over.mp3",
+      "loop": false,
+      "volume": 1.04
+    },
+    "gong": {
+      "file": "sfx/gong.mp3",
+      "loop": false,
+      "volume": 0.78
+    },
+    "heal": {
+      "file": "sfx/heal.mp3",
+      "loop": false,
+      "volume": 2.2
+    },
+    "heavy-hit": {
+      "file": "sfx/heavy-hit.mp3",
+      "loop": false,
+      "volume": 0.59
+    },
+    "level-up": {
+      "file": "sfx/level-up.mp3",
+      "loop": false,
+      "volume": 0.65
+    },
+    "loop-crowd": {
+      "file": "sfx/loop-crowd.mp3",
+      "loop": true,
+      "volume": 0.94
+    },
+    "loop-dungeon": {
+      "file": "sfx/loop-dungeon.mp3",
+      "loop": true,
+      "volume": 0.96
+    },
+    "loop-rain": {
+      "file": "sfx/loop-rain.mp3",
+      "loop": true,
+      "volume": 0.5
+    },
+    "loop-sea": {
+      "file": "sfx/loop-sea.mp3",
+      "loop": true,
+      "volume": 1.27
+    },
+    "loop-stillness": {
+      "file": "sfx/loop-stillness.mp3",
+      "loop": true,
+      "volume": 0.43
+    },
+    "loop-tavern": {
+      "file": "sfx/loop-tavern.mp3",
+      "loop": true,
+      "volume": 0.89
+    },
+    "miss": {
+      "file": "sfx/miss.mp3",
+      "loop": false,
+      "volume": 0.34
+    },
+    "pickup": {
+      "file": "sfx/pickup.mp3",
+      "loop": false,
+      "volume": 1.5
+    },
+    "potion": {
+      "file": "sfx/potion.mp3",
+      "loop": false,
+      "volume": 2.56
+    },
+    "puzzle": {
+      "file": "sfx/puzzle.mp3",
+      "loop": false,
+      "volume": 3
+    },
+    "serpent-hiss": {
+      "file": "sfx/serpent-hiss.mp3",
+      "loop": false,
+      "volume": 0.9
+    },
+    "servo": {
+      "file": "sfx/servo.mp3",
+      "loop": false,
+      "volume": 0.94
+    },
+    "shock": {
+      "file": "sfx/shock.mp3",
+      "loop": false,
+      "volume": 1.31
+    },
+    "stone-door": {
+      "file": "sfx/stone-door.mp3",
+      "loop": false,
+      "volume": 0.53
+    },
+    "sword-slash": {
+      "file": "sfx/sword-slash.mp3",
+      "loop": false,
+      "volume": 1.26
+    },
+    "victory": {
+      "file": "sfx/victory.mp3",
+      "loop": false,
+      "volume": 1.86
+    },
+    "war-cry": {
+      "file": "sfx/war-cry.mp3",
+      "loop": false,
+      "volume": 0.45
+    },
+    "water-rush": {
+      "file": "sfx/water-rush.mp3",
+      "loop": false,
+      "volume": 0.82
+    },
+    "wyrm-roar": {
+      "file": "sfx/wyrm-roar.mp3",
+      "loop": false,
+      "volume": 0.52
+    }
+  }
+}
