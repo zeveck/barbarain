@@ -17,7 +17,7 @@ export const chapter = {
   opening: 'The whole world held its breath, and did not let it out. In all of Khemi, in all the black land of Stygia, only one heart went on beating out of time.',
   // For the end-of-game screen (requested): shown after {chapterEnd:5}.
   credits: [
-    { role: 'Original idea and request', who: 'the player' },
+    { role: 'Original idea and request', who: 'Rich\u00a0Conlan' },
     { role: 'Story, code and design', who: 'Claude, via gamegen' },
     { role: 'Art', who: 'imagegen2, nanogen, anim8gen' },
     { role: 'Music and sound', who: 'audiogen (ElevenLabs)' },
@@ -939,7 +939,7 @@ export const scenes = {
 
   sc_credits: [
     { text: '✦ BarbarAIn ✦', art: 'keyart/title-tower', caption: 'BarbarAIn' },
-    { text: 'Original idea and request: the player.' },
+    { text: 'Original idea and request: Rich Conlan.' },
     { text: 'Story, code and design: Claude, via gamegen.' },
     { text: 'Art: imagegen2, nanogen, anim8gen.\nMusic and sound: audiogen (ElevenLabs).' },
     { text: 'Fonts: Alegreya, Pixelify Sans, Metamorphous and Cinzel Decorative (SIL Open Font License).' },

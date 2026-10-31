@@ -670,7 +670,7 @@ async function chapterEnd(n) {
 }
 
 const DEFAULT_CREDITS = [
-  { role: 'Original idea and request', who: 'the player' },
+  { role: 'Original idea and request', who: 'Rich\u00a0Conlan' },
   { role: 'Story, code and design', who: 'Claude, via gamegen' },
   { role: 'Art', who: 'imagegen2, nanogen, anim8gen' },
   { role: 'Music and sound', who: 'audiogen (ElevenLabs)' },
