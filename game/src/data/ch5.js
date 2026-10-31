@@ -21,9 +21,9 @@ export const chapter = {
     { role: 'Story, code and design', who: 'Claude, via gamegen' },
     { role: 'Art', who: 'imagegen2, nanogen, anim8gen' },
     { role: 'Music and sound', who: 'audiogen (ElevenLabs)' },
-    { role: 'Fonts (SIL Open Font License)', who: 'Alegreya, Pixelify Sans, Metamorphous, Cinzel Decorative' },
-    { role: 'Inspired by', who: 'the Hyborian Age of Robert E. Howard' },
-    { role: 'And thanks', who: 'to you, for reading the chronicle to its end' },
+    { role: 'Fonts (SIL Open Font License)', who: 'Alegreya, Pixelify Sans, Metamorphous, Cinzel\u00a0Decorative' },
+    { role: 'Inspired by', who: 'the Hyborian Age of Robert\u00a0E.\u00a0Howard' },
+    { role: 'And thanks', who: 'to you, for reading the chronicle to its\u00a0end' },
   ],
 };
 

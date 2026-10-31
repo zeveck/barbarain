@@ -573,10 +573,14 @@ function drawOverlay(cx, k) {
       const css = (cx.canvas.getBoundingClientRect().width || W) / W;   // CSS px per picture px
       const stripB = stripEl ? Math.ceil(stripEl.offsetHeight / css) : 18;   // keep clear of the turn-order row (tall foes: the Steward)
       const ty = Math.max(24, stripB + 9, Math.round(v.base - s.h) - 12);
-      cx.font = `${Math.round(6.5 * k)}px PixelifySans, monospace`;
+      const fpx = Math.max(6.5, 11 / css);   // never under 11 CSS px, so it reads on a phone
+      cx.font = `${Math.round(fpx * k)}px PixelifySans, monospace`;
+      if ('wordSpacing' in cx) cx.wordSpacing = `${Math.round(fpx * k * 0.25)}px`;   // the pixel font's own space nearly vanishes when small
       cx.lineWidth = Math.max(2, k); cx.strokeStyle = 'rgba(0,0,0,0.85)';
-      const X = Math.max(30, Math.min(W - 30, v.x + s.w / 2)) * k;
+      const half = Math.max(30, cx.measureText(u.label).width / k / 2 + 3);
+      const X = Math.max(half, Math.min(W - half, v.x + s.w / 2)) * k;
       cx.strokeText(u.label, X, ty * k); cx.fillStyle = '#ffe2a0'; cx.fillText(u.label, X, ty * k);
+      if ('wordSpacing' in cx) cx.wordSpacing = '0px';
     }
   }
   if (V.banner) {

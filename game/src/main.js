@@ -26,12 +26,19 @@ const DIR_LABEL = { n: 'N', s: 'S', e: 'E', w: 'W', u: 'Up', d: 'Down', in: 'In'
 async function boot() {
   loadSettings();
   applySettings();
-  await Promise.all([loadData(), Scene.initAssets(), Audio.init()]);
+  const dataP = loadData(), audioP = Audio.init();
+  await Scene.initAssets();
+  // Start painting the title (and fade it in) while the rest still loads.
+  R.screen = 'title';
+  { const cv = $('#title-art'); let f = 0; const early = () => { if (R.screen !== 'title' || titleRAF === -1) return; Scene.drawTitle(cv, f++); requestAnimationFrame(early); }; early(); }
+  revealTitle();
+  await Promise.all([dataP, audioP]);
+  titleRAF = -1;
   if (BATTLE_UI_READY) { try { BattleUI = await import('./battle-ui.js'); } catch (e) { console.warn('battle-ui failed to load', e); } }
   Scene.init($('#scene'), onSceneTap);
   UI.initLog();
   bindHooks(); bindACT(); bindChrome(); bindKeys();
-  const relayout = () => UI.layout();
+  const relayout = () => { UI.layout(); UI.fitRoomName(); };
   addEventListener('resize', relayout);
   addEventListener('orientationchange', () => setTimeout(relayout, 120));
   if (window.visualViewport) { visualViewport.addEventListener('resize', relayout); visualViewport.addEventListener('scroll', relayout); }
@@ -70,6 +77,22 @@ function unlockOnce() {
 
 // ---------------------------------------------------------------- title
 let titleRAF = 0;
+
+// Fade the title in once its painting and fonts have loaded (or after 3s at
+// most), so it never flickers through stand-in fonts or a bare background.
+let titleRevealed = false;
+function revealTitle() {
+  if (titleRevealed) return;
+  const fonts = document.fonts ? Promise.all(['400 1em Metamorphous', 'italic 1em Alegreya', '1em PixelifySans'].map(f => document.fonts.load(f))).catch(() => {}) : Promise.resolve();
+  const art = new Promise(res => {
+    const t0 = performance.now();
+    const check = () => (Scene.image('keyart/title-tower') || !Scene.hasAsset('keyart/title-tower') || performance.now() - t0 > 3000) ? res() : setTimeout(check, 50);
+    check();
+  });
+  const done = () => { if (titleRevealed) return; titleRevealed = true; requestAnimationFrame(() => $('#scr-title').classList.add('ready')); };
+  Promise.all([fonts, art]).then(done);
+  setTimeout(done, 3000);
+}
 function showTitle() {
   abortBattle();
   resetFlow();
@@ -81,11 +104,12 @@ function showTitle() {
   cancelAnimationFrame(titleRAF);
   const loop = () => { if (R.screen !== 'title') return; Scene.drawTitle(cv, f++); titleRAF = requestAnimationFrame(loop); };
   loop();
+  revealTitle();
   const autoMeta = slotMeta('auto');
   const hasAuto = !!autoMeta && !autoMeta.corrupt;
   $('#t-continue').hidden = !hasAuto;
   $('#t-menu').hidden = !unlocked;
-  $('#t-tap').hidden = unlocked;
+  $('#t-tap').hidden = unlocked; $('#t-tap').classList.remove('pending');
   if (unlocked) Audio.playMusic('title');
 }
 
@@ -650,8 +674,8 @@ const DEFAULT_CREDITS = [
   { role: 'Story, code and design', who: 'Claude, via gamegen' },
   { role: 'Art', who: 'imagegen2, nanogen, anim8gen' },
   { role: 'Music and sound', who: 'audiogen (ElevenLabs)' },
-  { role: 'Fonts (SIL OFL)', who: 'Alegreya, Pixelify Sans, Metamorphous, Cinzel Decorative' },
-  { role: 'Inspired by', who: 'the Hyborian Age of Robert E. Howard' },
+  { role: 'Fonts (SIL OFL)', who: 'Alegreya, Pixelify Sans, Metamorphous, Cinzel\u00a0Decorative' },
+  { role: 'Inspired by', who: 'the Hyborian Age of Robert\u00a0E.\u00a0Howard' },
 ];
 function creditsList() { const c = DB.chapters[5]?.credits; return Array.isArray(c) && c.length ? c : DEFAULT_CREDITS; }
 
@@ -671,14 +695,12 @@ function showEnd() {
   $('#end-found').textContent = `Endings found: ${found.length} of ${ENDINGS.length}`;
   const hints = $('#end-hints'); hints.innerHTML = '';
   for (const e of ENDINGS) if (!SETTINGS.endings[e.id]) hints.append(el('li', {}, e.hint));
-  hints.hidden = !hints.children.length;
+  hints.hidden = $('#end-hints-h').hidden = !hints.children.length;
   const cp = (id) => { const m = slotMeta('cp_' + id); return m && !m.corrupt; };
   $('#end-core').hidden = !cp('core');
   $('#end-wyrm').hidden = !cp('wyrm') || !!SETTINGS.endings.hound;
   $('#end-core').onclick = () => loadSlot('cp_core');
   $('#end-wyrm').onclick = () => loadSlot('cp_wyrm');
-  const dl = $('#end-credits'); dl.innerHTML = '';
-  for (const c of creditsList()) dl.append(el('dt', {}, c.role), el('dd', {}, c.who));
   Audio.playMusic('ending');
   $('#end-title').onclick = () => showTitle();
   $('#end-credits-btn').onclick = () => openCredits();
@@ -814,7 +836,7 @@ function closePopover() { if (popEl) { popEl.remove(); popEl = null; } }
 function popover(title, items, anchor, point) {
   closePopover();
   Audio.sfx('tap');
-  const box = el('div', { class: 'popover', role: 'menu' }, el('div', { class: 'pop-t' }, title),
+  const box = el('div', { class: 'popover', role: 'menu' }, el('div', { class: 'pop-t' }, String(title).charAt(0).toUpperCase() + String(title).slice(1)),
     ...items.map(it => el('button', { class: 'pop-b', role: 'menuitem', onclick: (e) => { e.stopPropagation(); closePopover(); it.fn(); } }, it.label)));
   document.body.append(box);
   popEl = box;
@@ -876,6 +898,7 @@ function bindChrome() {
   $('#t-new').addEventListener('click', () => newGame());
   $('#t-load').addEventListener('click', () => openLoadMenu());
   $('#t-settings').addEventListener('click', () => openSettings());
+  $('#t-howto').addEventListener('click', () => openHowTo());
   $('#t-credits').addEventListener('click', () => openCredits());
   $('#btn-menu').addEventListener('click', () => openPauseMenu());
   $('#btn-mute').addEventListener('click', () => toggleMute());
@@ -1052,7 +1075,7 @@ function openLoadMenu() {
       b.append(el('button', { class: 'row slot', disabled: !meta || meta.corrupt, onclick: async () => {
         if (R.screen === 'game' && !(await UI.confirm('Load', 'Load this save? Progress since your last save is lost.', 'Load', 'Cancel'))) return;
         loadSlot(s);
-      } }, el('span', { class: 'slot-no' }, s === 'auto' ? 'A' : s), slotLabel(meta, s)));
+      } }, el('span', { class: 'slot-no' + (s === 'auto' ? ' auto' : '') }, s === 'auto' ? 'Auto' : s), slotLabel(meta, s)));
     }
   } });
 }
@@ -1077,7 +1100,7 @@ function openSettings() {
       row('Typing sound', tog('typingSound')),
       row('Text speed', seg('textSpeed', [['slow', 'Slow'], ['normal', 'Normal'], ['fast', 'Fast'], ['instant', 'Instant']])),
       row('Difficulty', seg('difficulty', [['saga', 'Saga'], ['warrior', 'Warrior']])),
-      el('p', { class: 'muted small' }, 'Saga: story mode, enemies at 70% HP and damage, 25% more gold. Change any time.'),
+      el('p', { class: 'muted small' }, 'Saga is the gentler story mode: enemies have 70% of their HP and damage, and you find 25% more silver. Warrior is the full fight. Change it any time.'),
       row('Show hotspots', tog('showHotspots', applySettings)),
       row('Text size', seg('fontSize', [['s', 'S'], ['m', 'M'], ['l', 'L']], () => { applySettings(); UI.layout(); })),
     );
@@ -1088,7 +1111,7 @@ function openHowTo() {
   UI.openModal({ title: 'How to play', cls: 'howto', body: (b) => {
     const card = (icon, title, txt) => el('div', { class: 'how' }, el('img', { class: 'how-i', alt: '', src: icon }), el('div', {}, el('b', {}, title), el('p', {}, txt)));
     b.append(
-      card(Scene.portraitURL('portrait/kord', 'Kord'), UI.tapWords('Tap the glowing words'), 'Highlighted words, the "Things here" chips and the people and objects in the picture all open a small menu: Look, Talk, Take, Use, Hit.'),
+      card(Scene.portraitURL('portrait/kord', 'Kord'), UI.tapWords('Tap the glowing words'), 'Highlighted words, the row of chips under the story, and the people and objects in the picture all open a small menu: Look, Talk, Take, Use, Hit.'),
       card(UI.iconURL('key'), 'Use items', UI.tapWords('Open Items (or the bag button), pick something, then Use and tap a target. Combine joins two items into one. Equipped gear counts as held.')),
       card(UI.iconURL('sword'), 'Fight', 'Battles are turn-based. Every command acts on the target named on the button. Defend when a foe announces a big move. Auto fights for you.'),
       card(UI.iconURL('scroll'), 'Stuck?', 'The Journal lists your goals with three hints each, and "Ask the party" gets an opinion. Wrong ideas never kill you; they just get you a remark.'),
@@ -1100,8 +1123,8 @@ function openHowTo() {
 function openCredits() {
   UI.openModal({ title: 'Credits', body: (b) => {
     b.append(el('p', {}, 'BarbarAIn: a sword-and-sorcery text adventure in the spirit of Robert E. Howard\'s Hyborian Age. An original story; no text of Howard\'s is quoted.'),
-      el('dl', { class: 'end-credits' }, creditsList().map(c => [el('dt', {}, c.role), el('dd', {}, c.who)])),
-      el('p', {}, 'Fonts (SIL Open Font License): Alegreya by Juan Pablo del Peral, Pixelify Sans by Stefie Justprince, Metamorphous by James Grieshaber, Cinzel Decorative by Natanael Gama.'),
+      el('dl', { class: 'end-credits' }, creditsList().filter(c => !/^Fonts/.test(c.role)).map(c => [el('dt', {}, c.role), el('dd', {}, c.who)])),
+      el('p', {}, 'Fonts (SIL Open Font License): Alegreya by Juan Pablo del Peral, Pixelify Sans by Stefie Justprince, Metamorphous by James Grieshaber, Cinzel\u00a0Decorative by Natanael\u00a0Gama.'),
       el('p', { class: 'muted' }, 'Made with plain HTML, CSS and JavaScript.'));
   } });
 }

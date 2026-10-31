@@ -10,6 +10,12 @@ import * as Scene from './scene.js';
 import * as Audio from './audio.js';
 import { text as resolveText, check } from './conditions.js';
 
+const ICONS = {
+  bag: '<path d="M5 9h14l-1.2 11H6.2z"/><path d="M9 9V7a3 3 0 0 1 6 0v2"/>',
+  sound: '<path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5a3.5 3.5 0 0 1 0 5"/><path d="M18 7a7 7 0 0 1 0 10"/>',
+  muted: '<path d="M4 9.5h3.5L12 6v12l-4.5-3.5H4z"/><path d="M15.5 9.5l5 5M20.5 9.5l-5 5"/>'
+};
+export function icon(k) { const t = document.createElement('template'); t.innerHTML = `<svg class="ico" viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>`; return t.content.firstChild; }
 export const ACT = {};          // bound by main.js
 const $ = (sel, root = document) => root.querySelector(sel);
 export function el(tag, attrs = {}, ...kids) {
@@ -22,7 +28,7 @@ export function el(tag, attrs = {}, ...kids) {
     else if (k === 'style' && typeof v === 'object') Object.assign(e.style, v);
     else e.setAttribute(k, v === true ? '' : v);
   }
-  for (const kid of kids.flat()) if (kid != null && kid !== false) e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
+  for (const kid of kids.flat(Infinity)) if (kid != null && kid !== false) e.append(kid.nodeType ? kid : document.createTextNode(String(kid)));
   return e;
 }
 export function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
@@ -253,12 +259,27 @@ function trimLog() { while (logEl.children.length > 160) logEl.firstElementChild
 export function keepLogBottom() { const s = $('#story'); if (s) s.scrollTop = s.scrollHeight; }
 
 // ---------------------------------------------------------------- top bar, party strip
+// Shrink a long room name to fit the top bar before falling back to "…".
+export function fitRoomName(e = $("#tb-room")) {
+  e.style.fontSize = ''; e.style.visibility = ''; e.classList.remove('two');
+  const room = DB.rooms[S.room]; if (room) e.textContent = room.name;
+  let px = parseFloat(getComputedStyle(e).fontSize);
+  while (e.scrollWidth > e.clientWidth + 1 && px > 13) { px -= 1; e.style.fontSize = px + 'px'; }
+  // Still too long (the busy bar on a phone): two short lines rather than "Gallows B…".
+  if (e.scrollWidth > e.clientWidth + 1) { e.classList.add('two'); e.style.fontSize = '12px'; e.textContent = e.textContent.replace(/^The /, ''); }
+  if (e.classList.contains('two') && e.scrollWidth > e.clientWidth + 1) e.style.fontSize = '11px';
+  // Hopeless even so (a word that won't fit, or more than two lines): leave it out rather than show a stub.
+  if (e.classList.contains('two') && (e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 2)) e.style.visibility = 'hidden';
+  e.title = room ? room.name : e.textContent;
+}
+
 export function renderTop() {
   const room = DB.rooms[S.room];
   $('#tb-chapter').textContent = roman(S.chapter);
-  $('#tb-room').textContent = room ? room.name : '';
+  const tbr = $('#tb-room');
+  tbr.textContent = room ? room.name : '';
   $('#tb-gold').textContent = S.gold;
-  $('#btn-mute').textContent = SETTINGS.mute ? '🔇' : '🔊';
+  $('#btn-mute').replaceChildren(icon(SETTINGS.mute ? 'muted' : 'sound'));
   $('#btn-mute').setAttribute('aria-label', SETTINGS.mute ? 'Unmute' : 'Mute');
   const strip = $('#partystrip'), mini = $('#tb-mini');
   strip.innerHTML = ''; mini.innerHTML = '';
@@ -269,13 +290,14 @@ export function renderTop() {
     const hp = Math.max(0, Math.min(1, p.hp / st.hp)), mp = st.mp ? Math.max(0, Math.min(1, p.mp / st.mp)) : 0;
     const card = el('button', { class: 'pm' + (p.frozen ? ' frozen' : ''), 'aria-label': `${m.name} ${p.hp}/${st.hp} HP`, onclick: () => ACT.openPanel?.('party') },
       el('img', { class: 'pm-face', alt: '', src: Scene.portraitURL(m.portrait || 'portrait/' + p.id, m.name, p.id === 'ain') }),
-      el('span', { class: 'pm-bars' }, el('span', { class: 'pm-name' }, m.name),
+      el('span', { class: 'pm-bars' }, el('span', { class: 'pm-name' }, m.short || m.name.split(' ').pop()),
         el('span', { class: 'bar hp' }, el('i', { style: { width: (hp * 100) + '%' } })),
         el('span', { class: 'bar mp' }, el('i', { style: { width: (mp * 100) + '%' } }))));
     strip.append(card);
     mini.append(el('span', { class: 'mini-pm', title: m.name }, el('span', { class: 'bar hp' }, el('i', { style: { width: (hp * 100) + '%' } })), el('span', { class: 'bar mp' }, el('i', { style: { width: (mp * 100) + '%' } }))));
   }
   strip.append(el('span', { class: 'pm-lv' }, 'Lv ' + partyLevel()));
+  fitRoomName(tbr);   // last: the mini bars above take room from it
 }
 
 // ---------------------------------------------------------------- tray
@@ -289,7 +311,7 @@ export function setTray(spec) {
   chips.innerHTML = ''; btns.innerHTML = '';
   if (spec.chips && spec.chips.length || spec.bag) {
     chips.hidden = false;
-    if (spec.bag) chips.append(el('button', { class: 'chip chip-bag', 'aria-label': 'Bag', title: 'Bag (quick use)', onclick: () => ACT.quickBag?.() }, '🎒'));
+    if (spec.bag) chips.append(el('button', { class: 'chip chip-bag', 'aria-label': 'Bag', title: 'Bag (quick use)', onclick: () => ACT.quickBag?.() }, icon('bag')));
     if (spec.chipsLabel) chips.append(el('span', { class: 'chips-label' }, spec.chipsLabel));
     for (const c of spec.chips || []) {
       chips.append(el('button', { class: 'chip chip-' + (c.kind || 'thing') + (c.pulse ? ' pulse' : '') + (c.fresh ? ' fresh' : ''), 'data-id': c.id, onclick: ev => ACT.chip?.(c.id, ev.currentTarget) }, c.label));
@@ -334,10 +356,18 @@ export function setBanner(textOrNull) {
 // ---------------------------------------------------------------- toasts
 export function toast(text, kind = 'info', opts = {}) {
   const box = $('#toasts');
-  const t = el('div', { class: 'toast toast-' + kind }, el('span', {}, text));
+  // Several things found at once read as one note ("+ Slaver's writ, Open shackles"), not a pile.
+  const last = box.lastElementChild;
+  if (!opts.action && (kind === 'item' || kind === 'gold') && last && last.dataset.kind === kind && !last.classList.contains('out') && Date.now() - last.dataset.t < 1500 && !last.querySelector('.toast-act')) {
+    const sp = last.firstElementChild;
+    sp.textContent += ', ' + (kind === 'item' ? String(text).replace(/^\+\s*/, '') : text);
+    return;
+  }
+  const t = el('div', { class: 'toast toast-' + kind, 'data-kind': kind, 'data-t': Date.now() }, el('span', {}, text));
   if (opts.action) t.append(el('button', { class: 'toast-act', onclick: () => { opts.action.fn(); t.remove(); } }, opts.action.label));
   box.append(t);
-  while (box.children.length > (layoutMode === 'desktop' ? 4 : 3)) box.firstElementChild.remove();
+  while (box.children.length > (layoutMode === 'desktop' ? 4 : layoutMode === 'landscape' ? 2 : 3)) box.firstElementChild.remove();
+  placeNotes();
   setTimeout(() => t.classList.add('out'), opts.ms || (opts.action ? 5200 : 2400));
   setTimeout(() => t.remove(), (opts.ms || (opts.action ? 5200 : 2400)) + 400);
 }
@@ -345,7 +375,7 @@ export function toast(text, kind = 'info', opts = {}) {
 // ---------------------------------------------------------------- tips
 const TIPS = {
   tap: 'Tap a glowing word to act on it.',
-  exit: 'Exits are in the tray below the story. On a keyboard, arrow keys move too.',
+  exit: () => 'Exits are in the tray below the story.' + (matchMedia('(pointer: coarse)').matches ? '' : ' Arrow keys move too.'),
   item: 'New things go in your bag: open Items to look, use or equip them.',
   battle: 'Battle! Each command hits the target named on its button.',
   use: 'Using an item: tap a person, a thing, or a chip. ✕ cancels.',
@@ -363,13 +393,23 @@ export function tip(id) {
   if (!TIPS[id] || SETTINGS.tips[id]) return;
   SETTINGS.tips[id] = true; saveSettings();
   const box = $('#tips');
-  const t = el('div', { class: 'tip', role: 'status' }, el('span', { class: 'tip-i' }, '?'), el('span', {}, tapWords(TIPS[id])),
-    el('button', { class: 'tip-x', 'aria-label': 'Dismiss', onclick: () => t.remove() }, '✕'));
+  const t = el('div', { class: 'tip', role: 'status' }, el('span', { class: 'tip-i' }, '?'), el('span', {}, tapWords(typeof TIPS[id] === 'function' ? TIPS[id]() : TIPS[id])),
+    el('button', { class: 'tip-x', 'aria-label': 'Dismiss', onclick: () => { t.remove(); placeNotes(); } }, '✕'));
   box.innerHTML = ''; box.append(t);
   box.classList.toggle('in-modal', modals.length > 0);   // a tip about a modal (the shop's) shows over it; others wait hidden until it closes
   box.classList.toggle('below', id === 'battle');   // on phones the battle tip sits under the battlefield, not on it (any tip does while in battle: style.css)
   setTimeout(() => t.classList.add('out'), 7000);
-  setTimeout(() => t.remove(), 7600);
+  setTimeout(() => { t.remove(); placeNotes(); }, 7600);
+  placeNotes();
+}
+
+// Toasts stack under a showing tip instead of on top of it.
+function placeNotes() {
+  const box = $('#toasts'); box.style.top = '';
+  const tipEl = $('#tips .tip');
+  if (!tipEl || !tipEl.offsetParent) return;
+  const tb = tipEl.getBoundingClientRect(), top = box.getBoundingClientRect().top;
+  if (top < tb.bottom + 6 && top + 4 > tb.top - box.offsetHeight - 40) box.style.top = (tb.bottom + 6) + 'px';
 }
 
 // ---------------------------------------------------------------- modals and sheets
@@ -626,7 +666,7 @@ function renderJournal(body) {
   if (sideOpen.length || sideShut.length) {
     body.append(el('h4', { class: 'j-side' }, 'Side quests'));
     for (const o of sideOpen) { const c = objCard(o); c.classList.add('side'); if (o.lock) c.insertBefore(el('p', { class: 'obj-lock' }, o.lock), c.children[1] || null); body.append(c); }
-    for (const o of sideShut) body.append(el('p', { class: S.journal.obj[o.id] === 'done' ? 'obj-done' : 'obj-closed' }, S.journal.obj[o.id] === 'done' ? '✦ ' + o.text : `✧ ${o.text} (lost to time)`));
+    for (const o of sideShut) body.append(el('p', { class: S.journal.obj[o.id] === 'done' ? 'obj-done' : 'obj-closed' }, S.journal.obj[o.id] === 'done' ? '✦ ' + o.text : `✧ ${String(o.text).replace(/[.!]$/, '')}: lost to time`));
   }
   if (done.length) {
     body.append(el('h4', {}, 'Done'));
@@ -667,12 +707,20 @@ function renderMap(body) {
   for (const id of shown) {
     const r = DB.rooms[id]; const [x, y] = P(r);
     const g = mk('g', { class: 'm-node' + (id === S.room ? ' here' : '') + (known.has(id) ? ' known' : ' unknown') + (r.dungeon ? ' dungeon' : '') });
-    g.append(mk('rect', { x: x - 30, y: y - 13, width: 60, height: 26, rx: 4 }));
-    const tEl = mk('text', { x, y: y + 4, 'text-anchor': 'middle' });
+    // The name on one or two lines inside its box; a long word is squeezed to fit, never spills out.
     const nm = r.mapName || r.name.replace(/^The /, '');
-    tEl.textContent = known.has(id) ? (nm.length > 12 ? nm.slice(0, 11) + '…' : nm) : '?';
-    g.append(tEl);
-    if (id === S.room) g.append(mk('circle', { cx: x + 26, cy: y - 11, r: 4, class: 'm-here' }));
+    const lines = [];
+    if (known.has(id)) for (const word of nm.split(' ')) { const l = lines.length - 1; if (l >= 0 && (lines[l] + ' ' + word).length <= 10) lines[l] += ' ' + word; else lines.push(word); }
+    else lines.push('?');
+    if (lines.length > 2) lines.splice(1, lines.length, lines.slice(1).join(' '));
+    const bh = lines.length > 1 ? 34 : 24;
+    g.append(mk('rect', { x: x - 33, y: y - bh / 2, width: 66, height: bh, rx: 4 }));
+    lines.forEach((line, i) => {
+      const t = mk('text', { x, y: y + 4 + (lines.length > 1 ? (i ? 7 : -6) : 0), 'text-anchor': 'middle' });
+      if (line.length > 10) { t.setAttribute('textLength', 60); t.setAttribute('lengthAdjust', 'spacingAndGlyphs'); }
+      t.textContent = line; g.append(t);
+    });
+    if (id === S.room) g.append(mk('circle', { cx: x + 30, cy: y - 12, r: 4, class: 'm-here' }));
     const travelOk = canTravel && known.has(id) && id !== S.room && !r.dungeon && !DB.rooms[S.room]?.dungeon;
     if (travelOk) { g.classList.add('travel'); g.addEventListener('click', () => ACT.travel?.(id)); g.setAttribute('role', 'button'); }
     svg.append(g);

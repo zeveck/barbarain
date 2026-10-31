@@ -54,3 +54,29 @@ Reviewers: Player, Builder. I refined it myself in design/SIDEQUESTS.md.
 | B5: Journal and validate have no side or closed support | should | side grouping + closed state in ui.js and validate |
 | B6: Unsupported charm stats | must | Earring Evasion +6% / Crit +4%; Ring AGI +4 / Crit +5% |
 | B8: Replays can't skip the chapter-end check | should | noEndCheck option |
+
+## Polish pass (after first publish, 2026-10-31)
+
+Owner found the tagline's lone "seems.", "[object HTMLElement]" in Credits and a flicker as the title loads. Fixed, then a fresh visual reviewer went through every screen at five sizes, and the screen checker gained text checks (junk text, lone last words, clipped text) that run on every screen it visits.
+
+| Finding | Outcome |
+|---|---|
+| Tagline wrap; lone last words across headings, labels and text (35 found) | `text-wrap: balance` / `pretty` game-wide, names kept together: 0 left |
+| Credits showed `[object HTMLElement]` | `el()` flattens nested children fully; checker opens Credits at every size |
+| Title flicker (stand-in fonts, art popping in, button label swap) | Fonts and art preloaded; title fades in once ready; button keeps its space |
+| Pop-up notes pile up and cover each other / tips / fighters | Same-kind notes merge; notes stack under a tip; battle notes go under the battlefield on phones; story tips hidden under phone panels |
+| Credits table cramped on phones; credits shown three times at the end | Stacks on narrow screens; end screen keeps only the Credits button; fonts listed once |
+| Settings "Instant" cut off at 360 wide | Rows wrap; controls never clip |
+| Sideways title menu / game over ran off screen | Short-screen layout: two-column menu, smaller logo, scrollable |
+| Map names spilled out of boxes; map tiny on phones | Names wrap or squeeze inside boxes; map scrolls instead of shrinking |
+| Top-bar room name cut to "The S…" | Shrinks, then two lines, then hidden; party strip uses short names |
+| Battle name labels tiny, spaces lost | At least 11 px on screen, word spacing added |
+| Mixed emoji and symbols in top bar and tabs; blank keyboard icon | One set of gold line icons |
+| Exit "more" hint over button text | Taller, more opaque fade |
+| Naming: item case, "Marrow the Shipwright", lower-case menu headings | Item names in title case; one spelling; headings capitalised |
+| Journal: "wager. (lost to time)", faint lock line, struck-through goals | "…: lost to time"; lock line readable; done goals marked ✦ without strike-through |
+| Chapter card hard-edged panel, dim prompt | Panel fades at its edges; prompt brighter |
+| Chapter V hall floor washed out | Floor darkened toward the bottom (original kept in .gamegen/candidates/bg) |
+| Small: Settings note, "A" slot, stacked Save over Pause, Toktai narration in quotes, "Things here", Saga button, no How to play on title | All fixed |
+| Companions listed under Items › Key | Kept: by design (they are "carried" for use-on puzzles) |
+| Battle log "The Drunk B…" then "The drunk…" | Kept: minor |

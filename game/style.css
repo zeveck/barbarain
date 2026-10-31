@@ -23,6 +23,10 @@ html, body { margin: 0; height: 100%; background: var(--night); color: var(--ink
 body { font-family: var(--serif); -webkit-user-select: none; user-select: none; touch-action: manipulation; overscroll-behavior: none; -webkit-tap-highlight-color: transparent; }
 /* no ligatures anywhere: the pixel UI font joins "fi" into a glyph that reads as "A" */
 *, *::before, *::after { font-variant-ligatures: none; font-feature-settings: "liga" 0, "clig" 0; }
+/* Line breaks: running text never leaves one word alone on its last line, and
+   short headings, labels and buttons split into even lines. */
+p, li, dd, blockquote, .card-text, .shop-greet, .desc { text-wrap: pretty; }
+h1, h2, h3, h4, dt, button, .btn, .lbl, .card-name, .card-num, .toast, .end-ending, .j-h, caption, figcaption, label { text-wrap: balance; }
 button { font-family: var(--ui); color: inherit; cursor: pointer; }
 button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid var(--bronze-lt); outline-offset: 1px; }
 [hidden] { display: none !important; }
@@ -43,7 +47,16 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 
 /* ---------------------------------------------------------------- screens */
 .screen { position: fixed; left: 0; top: 0; width: 100%; height: var(--app-h); }
-#scr-title, #scr-card { background: #050306; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+#scr-title, #scr-card { background: #050306; display: flex; align-items: safe center; justify-content: center; overflow: hidden; }
+#scr-title > .t-inner { max-height: 100%; overflow-y: auto; }
+/* The title waits, hidden, until its painting and fonts are in, then fades in
+   once (no font swaps or art popping in). The failsafe shows it after 4s even
+   if the script never says it is ready. */
+#scr-title > #title-art, #scr-title > .t-inner { opacity: 0; transition: opacity 0.6s ease; animation: titleFailsafe 0s 4s forwards; }
+#scr-title.ready > #title-art, #scr-title.ready > .t-inner { opacity: 1; animation: none; }
+@keyframes titleFailsafe { to { opacity: 1; } }
+/* keeps its space while the game loads, so nothing jumps when it appears */
+.t-tap.pending { visibility: hidden; }
 #title-art, #card-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 .t-inner { position: relative; z-index: 1; text-align: center; padding: 16px; width: min(92vw, 420px); padding-bottom: env(safe-area-inset-bottom); }
 .logo { font-family: var(--display); font-weight: normal; font-size: clamp(44px, 12vw, 84px); margin: 0 0 4px; letter-spacing: 1px; line-height: 1.05; color: #f0c870; }
@@ -57,12 +70,12 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 @keyframes pulse { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
 .t-menu { width: min(80vw, 280px); margin: 0 auto; }
 .t-menu .btn { background: linear-gradient(rgba(74, 50, 30, 0.92), rgba(54, 36, 26, 0.92)); }
-.card-inner { position: relative; z-index: 1; text-align: center; padding: 20px; max-width: 560px; max-height: 100%; overflow-y: auto; background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.78), rgba(0, 0, 0, 0.55) 75%, rgba(0, 0, 0, 0.25)); }
+.card-inner { position: relative; z-index: 1; text-align: center; padding: 20px; max-width: 560px; max-height: 100%; overflow-y: auto; padding: 34px 40px; background: radial-gradient(closest-side, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.62) 62%, rgba(0, 0, 0, 0)); }   /* fades out at its edges: no hard box */
 .card-num { font-family: var(--ui); color: var(--bronze-lt); letter-spacing: 4px; text-transform: uppercase; font-size: 16px; text-shadow: 0 1px 2px #000; }
 .card-name { font-family: var(--display); font-size: clamp(28px, 7vw, 46px); color: #f3d9a0; text-shadow: 0 2px 0 #000, 0 0 16px #000; margin: 8px 0 14px; }
 .card-text { font-size: 18px; line-height: 1.5; font-style: italic; color: #efe0c4; text-shadow: 0 1px 2px #000, 0 0 8px #000; }
-.card-tap { font-family: var(--ui); color: var(--ink-dim); margin-top: 14px; animation: pulse 2s infinite; font-size: 14px; }
-#scr-gameover { background: radial-gradient(#2a0b08, #050203 70%); display: flex; align-items: center; justify-content: center; z-index: 40; }
+.card-tap { font-family: var(--ui); color: #e8d6b4; text-shadow: 0 1px 2px #000, 0 0 8px #000; margin-top: 14px; animation: pulse 2s infinite; font-size: 14px; }
+#scr-gameover { background: radial-gradient(#2a0b08, #050203 70%); display: flex; align-items: safe center; justify-content: center; z-index: 40; overflow-y: auto; }
 .go-inner { text-align: center; width: min(86vw, 320px); }
 .go-inner h2 { font-family: var(--display); font-weight: normal; font-size: 46px; color: var(--crimson-lt); margin: 0; text-shadow: 0 3px 0 #000; }
 .go-line { font-style: italic; color: var(--ink-dim); font-size: 18px; margin: 10px 0 26px; }
@@ -75,9 +88,15 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 #topbar { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 4px 0 10px; background: linear-gradient(#2e2014, #1e140c); border-bottom: 2px solid var(--bronze); font-family: var(--ui); min-width: 0; }
 .tb-loc { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; overflow: hidden; }
 .tb-ch { color: var(--bronze-lt); font-size: 14px; border: 1px solid var(--bronze); padding: 0 5px; border-radius: 3px; }
-.tb-room { font-family: var(--display); font-size: 16px; color: #f0d9a8; overflow: hidden; text-overflow: ellipsis; }
+.tb-room { font-family: var(--display); font-size: 16px; color: #f0d9a8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.tb-room.two { align-self: center; white-space: normal; line-height: 1.05; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; text-wrap: balance; max-height: 2.2em; }
 .tb-gold { color: var(--gold); font-size: 15px; display: flex; gap: 3px; align-items: center; padding: 0 4px; }
 .tb-btn { width: 36px; height: 34px; background: none; border: 0; font-size: 18px; border-radius: 4px; flex: none; }
+/* line icons, drawn in the text colour, so the bar and tabs match */
+.ico { width: 1.15em; height: 1.15em; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; display: inline-block; }
+.tb-btn { color: var(--bronze-lt); } .tb-btn .ico { width: 22px; height: 22px; }
+.tabs button .ti .ico { width: 20px; height: 20px; }
+.chip-bag .ico { width: 18px; height: 18px; }
 .tb-btn:hover { background: rgba(255, 220, 160, 0.08); }
 .tb-mini { display: none; gap: 3px; }
 body.busy-mode.layout-portrait .tb-mini { display: flex; }
@@ -94,7 +113,7 @@ body.busy-mode.layout-portrait .tb-mini { display: flex; }
 .pm { display: flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0 2px; min-width: 0; flex: 0 1 auto; height: 28px; }
 .pm.frozen { filter: grayscale(1) opacity(0.6); }
 .pm-face { width: 24px; height: 24px; image-rendering: pixelated; border: 1px solid var(--bronze); border-radius: 2px; }
-.pm-bars { display: flex; flex-direction: column; gap: 1px; width: 58px; flex: 0 1 58px; min-width: 22px; }
+.pm-bars { display: flex; flex-direction: column; gap: 1px; width: 58px; flex: 0 1 58px; min-width: 36px; }
 .pm-name { font-size: 11px; line-height: 11px; color: var(--ink-dim); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .bar { display: block; height: 5px; background: #0a0604; border: 1px solid #3a2a18; position: relative; }
 .bar i { display: block; height: 100%; }
@@ -133,7 +152,7 @@ em { font-style: italic; }
 
 /* tray */
 #tray { background: #140d08; border-top: 2px solid var(--bronze); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; }
-#tray.more::after { content: '▾ more'; position: sticky; bottom: 0; display: block; height: 26px; margin-top: -26px; padding-top: 8px; box-sizing: border-box; text-align: center; font-size: 12px; letter-spacing: 0.08em; color: var(--bronze-lt); background: linear-gradient(rgba(20, 13, 8, 0), #140d08 70%); pointer-events: none; }
+#tray.more::after { content: '▾ more'; position: sticky; bottom: 0; display: block; height: 34px; margin-top: -34px; padding-top: 16px; box-sizing: border-box; text-align: center; font-size: 12px; letter-spacing: 0.08em; color: var(--bronze-lt); background: linear-gradient(rgba(20, 13, 8, 0), #140d08 45%); pointer-events: none; }
 .chips { display: flex; gap: 6px; padding: 5px 8px; overflow-x: auto; overflow-y: hidden; height: 40px; align-items: center; scrollbar-width: none; touch-action: pan-x; border-bottom: 1px solid #2e2014; }
 .chips::-webkit-scrollbar { display: none; }
 .chip { flex: none; height: 30px; padding: 0 12px; border-radius: 15px; background: #2a1c11; border: 1px solid #6a5028; font-size: 14px; white-space: nowrap; }
@@ -230,19 +249,22 @@ body.layout-desktop .buttons.numbered .tbtn, body.layout-landscape .buttons.numb
 .j-h { font-family: var(--display); font-weight: normal; color: #f0d9a8; margin: 0 0 8px; font-size: 17px; }
 .obj-t { margin: 0 0 4px; font-family: var(--serif); font-size: 16px; }
 .hint { margin: 4px 0; color: var(--gold); font-family: var(--serif); font-size: 15px; }
-.obj-done { color: var(--ink-faint); text-decoration: line-through; margin: 2px 0; }
-.obj-closed { color: var(--ink-faint); font-style: italic; margin: 2px 0; opacity: 0.75; }
+.obj-done { color: var(--ink-dim); margin: 2px 0; }   /* the ✦ marks it done; no strike-through to read through */
+.obj-closed { color: var(--ink-dim); font-style: italic; margin: 2px 0; }
 .card.obj.side { border-left: 3px solid var(--bronze-lt); }
-.obj-lock { font-size: 12px; color: var(--ink-faint); font-style: italic; margin: 0 0 4px; }
+.obj-lock { font-size: 13.5px; color: #e0b070; margin: 0 0 4px; }
 .j-side { color: var(--bronze-lt); }
 h4 { font-family: var(--ui); font-weight: normal; color: var(--bronze-lt); margin: 14px 0 6px; border-bottom: 1px solid #3a2a18; }
 .best { padding: 3px 0; }
 .map-wrap { background: #120c07; border: 1px solid #3a2a18; border-radius: 4px; padding: 4px; }
 svg.map { width: 100%; height: auto; display: block; font-family: var(--ui); }
+/* phones: never shrink the map below readable size; scroll it instead */
+.map-wrap { overflow-x: auto; } svg.map { min-width: min(100%, 100vw); }
+@media (max-width: 560px) { svg.map { min-width: 480px; } }
 .m-edge { stroke: #8a6a32; stroke-width: 2; }
 .m-edge.faint { stroke-dasharray: 4 4; opacity: 0.5; }
 .m-node rect { fill: #2a1c11; stroke: #7a5c2c; stroke-width: 2; }
-.m-node text { fill: var(--ink); font-size: 11px; pointer-events: none; }
+.m-node text { fill: var(--ink); font-size: 10.5px; pointer-events: none; }
 .m-node.unknown rect { fill: #120c07; stroke-dasharray: 3 3; } .m-node.unknown text { fill: var(--ink-faint); }
 .m-node.dungeon rect { stroke: #6a3a2a; }
 .m-node.here rect { stroke: var(--gold); fill: #3a2616; }
@@ -265,12 +287,14 @@ svg.map { width: 100%; height: auto; display: block; font-family: var(--ui); }
 .m-sheet { align-items: flex-end; padding-bottom: 0; }
 .modal.sheet { border-radius: 8px 8px 0 0; max-height: 70%; padding-bottom: env(safe-area-inset-bottom); }
 .slot-no { width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--bronze); border-radius: 3px; color: var(--bronze-lt); flex: none; }
-.row.slot { min-height: 54px; }
-.set-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 46px; border-bottom: 1px solid #3a2a18; font-size: 15px; }
+.row.slot { min-height: 54px; flex-direction: row; align-items: center; }
+.set-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 10px; min-height: 46px; padding: 4px 0; border-bottom: 1px solid #3a2a18; font-size: 15px; }
 .set-row input[type=range] { width: 52%; accent-color: var(--bronze-lt); }
 .set-row input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--bronze-lt); }
-.seg { display: inline-flex; border: 1px solid var(--bronze); border-radius: 4px; overflow: hidden; }
-.seg-b { background: #1e140c; border: 0; padding: 7px 9px; font-size: 13px; color: var(--ink-dim); min-height: 34px; }
+/* a label keeps its line; a control that doesn't fit beside it moves under it */
+.set-row > :first-child { flex: 1 0 auto; }
+.seg { display: inline-flex; max-width: 100%; border: 1px solid var(--bronze); border-radius: 4px; overflow: hidden; }
+.seg-b { background: #1e140c; border: 0; padding: 7px 9px; white-space: nowrap; font-size: 13px; color: var(--ink-dim); min-height: 34px; }
 .seg-b + .seg-b { border-left: 1px solid #5a4424; }
 .seg-b.on { background: #5a2a1c; color: var(--gold); }
 .how { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 10px; }
@@ -448,6 +472,8 @@ body.layout-desktop .bt-lbl { flex-direction: row; gap: 6px; align-items: baseli
 body.layout-portrait #tips { top: calc(env(safe-area-inset-top) + 36px + var(--pic-h) - 6px); transform: translate(-50%, -100%); width: min(94vw, 380px); }
 body.layout-landscape #tips { left: calc(env(safe-area-inset-left) + 48px + 160px); top: 174px; transform: translate(-50%, -100%); width: 304px; }
 body.layout-portrait #tips.below, body.layout-portrait.in-battle #tips { top: calc(env(safe-area-inset-top) + 36px + var(--pic-h) + 6px); transform: translate(-50%, 0); }
+/* in battle, notes go under the battlefield, never over the fighters */
+body.layout-portrait.in-battle #toasts { top: calc(env(safe-area-inset-top) + 36px + var(--pic-h) + 6px); }
 body.layout-landscape #tips.below, body.layout-landscape.in-battle #tips { left: auto; right: calc(env(safe-area-inset-right) + 8px); top: 8px; transform: none; width: min(44vw, 304px); }
 body.layout-portrait .tip, body.layout-landscape .tip { font-size: 13px; padding: 3px 4px 3px 8px; gap: 6px; line-height: 1.2; }
 body.layout-portrait .tip-i, body.layout-landscape .tip-i { width: 18px; height: 18px; font-size: 12px; }
@@ -467,6 +493,9 @@ body.layout-portrait .tip-x, body.layout-landscape .tip-x { width: 30px; height:
 /* short screens: the Credits button carries the credits */
 .end-credits { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; text-align: left; font-family: var(--ui); font-size: 14px; margin: 0 0 22px; }
 .end-credits dt { color: var(--bronze-lt); } .end-credits dd { margin: 0; color: var(--ink); }
+/* narrow screens: each role above its names, instead of two cramped columns */
+@media (max-width: 520px) { .end-credits { grid-template-columns: 1fr; gap: 0; } .end-credits dd { margin-bottom: 8px; } }
+.end-hints-h { margin: 14px 0 4px; font-family: var(--ui); font-size: 13px; letter-spacing: 1px; text-transform: uppercase; color: var(--bronze-lt); }
 /* short screens: the Credits button carries the credits (after the base rule, so it wins) */
 @media (max-height: 600px) { #scr-end .end-credits { display: none; } #scr-end .logo { font-size: clamp(36px, 9vh, 64px); } }
 body.layout-landscape .buttons.battle, body.layout-portrait .buttons.battle { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -486,3 +515,23 @@ body:has(#overlay:not([hidden])) #tips.in-modal { top: auto; bottom: calc(env(sa
 body.layout-landscape .modal.pause .m-body { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8px; }
 body.layout-landscape .modal.pause .btn.wide { margin: 4px 0; }
 @media (max-width: 380px) { .st-b { padding: 6px 6px; font-size: 12px; } }
+
+/* Short screens (a phone held sideways): the title and game-over screens fit
+   without anything running off the top or bottom. */
+@media (max-height: 430px) {
+  #scr-title .logo { font-size: clamp(34px, 15vh, 60px); }
+  #scr-title .tagline { margin-bottom: 10px; font-size: 15px; }
+  #scr-title .t-inner { padding-top: 8px; padding-bottom: 8px; }
+  #scr-title .t-inner { width: min(94vw, 500px); }
+  .t-menu { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; width: 100%; }
+  .t-menu .btn { margin: 0; min-height: 40px; flex: 0 0 calc(50% - 3px); text-align: center; }
+  .go-inner h2 { font-size: 34px; }
+  .go-inner { padding: 10px 0; }
+}
+
+/* one window at a time: a window opened from another (Save from Pause) hides the one beneath */
+#overlay .m-wrap:not(:last-child) .modal { visibility: hidden; }
+#overlay .m-wrap + .m-wrap { background: none; }
+.slot-no.auto { width: auto; padding: 0 5px; font-size: 11px; letter-spacing: 0.5px; }
+/* a phone panel (Items, Journal, Map…) covers the story: tips about the story wait until it closes */
+body.panel-open:not(.layout-desktop) #tips:not(.in-modal) { display: none; }
