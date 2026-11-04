@@ -54,6 +54,14 @@ body.layout-desktop.font-m { --story-size: 18px; } body.layout-desktop.font-l { 
 #scr-title > #title-art, #scr-title > .t-inner { opacity: 0; transition: opacity 0.6s ease; animation: titleFailsafe 0s 4s forwards; }
 #scr-title.ready > #title-art, #scr-title.ready > .t-inner { opacity: 1; animation: none; }
 @keyframes titleFailsafe { to { opacity: 1; } }
+/* two small links in the bottom corners of the title screen only (hidden under any window) */
+.t-link { position: absolute; z-index: 2; bottom: calc(env(safe-area-inset-bottom) + 10px); padding: 6px 8px; margin: -6px -8px; font-family: var(--ui); font-size: 13px; line-height: 1.2; color: #e8d6b4; text-shadow: 0 1px 2px #000, 0 0 6px #000; text-decoration: none; opacity: 0.7; transition: opacity 0.2s; }
+.t-link-site { left: calc(env(safe-area-inset-left) + 12px); }
+.t-link-gh { right: calc(env(safe-area-inset-right) + 12px); }
+.t-link:hover, .t-link:focus-visible { opacity: 1; text-decoration: underline; }
+#scr-title:not(.ready) > .t-link { opacity: 0; pointer-events: none; }
+body:has(#overlay:not([hidden])) .t-link { display: none; }
+@media (pointer: coarse), (max-width: 520px) { .t-link { font-size: 11.5px; } }
 /* keeps its space while the game loads, so nothing jumps when it appears */
 .t-tap.pending { visibility: hidden; }
 #title-art, #card-art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }

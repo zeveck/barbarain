@@ -894,6 +894,11 @@ function bindChrome() {
   document.querySelector('.card-tap').textContent = UI.tapWords('tap to continue');
   $('#t-tap').addEventListener('click', titleBegin);
   $('#scr-title').addEventListener('click', e => { if (!$('#t-tap').hidden && !e.target.closest('button')) titleBegin(); });
+  // the corner links open their page only: the tap never reaches the title (or Enter the key handler)
+  document.querySelectorAll('.t-link').forEach(a => {
+    ['pointerdown', 'click', 'touchstart'].forEach(ev => a.addEventListener(ev, e => e.stopPropagation(), { passive: true }));
+    a.addEventListener('keydown', e => { if (e.key === 'Enter') e.stopPropagation(); });
+  });
   $('#t-continue').addEventListener('click', () => loadSlot('auto'));
   $('#t-new').addEventListener('click', () => newGame());
   $('#t-load').addEventListener('click', () => openLoadMenu());
